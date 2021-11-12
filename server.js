@@ -2,9 +2,10 @@ const express = require('express')
 const mongoose = require('mongoose')
 const session = require('cookie-session')
 
-// const UserRouter = require('./routes/maybe_user')
 const AccountRouter = require('./routes/account')
-// const TransactionRouter = require('./routes/maybe_transaction')
+const ApiRouter = require('./routes/api')
+
+const isAuthenticated = require('./middlewares/isAuthenticated')
 
 const app = express()
 
@@ -22,11 +23,12 @@ app.use(session({
   name: 'session',
   keys: ['key1', 'key2'],
   maxAge: 10000,
-  // 5 seconds
+  // 10 seconds
 }))
 
 // can only access req.session within a POST request
 app.post('/', (req, res) => {
+  console.log(req.session)
   if (req.session.username && req.session.password) {
     res.send(`hello ${req.session.username}`)
   } else {
@@ -35,6 +37,13 @@ app.post('/', (req, res) => {
 })
 
 app.use('/account', AccountRouter)
+app.use('/api', ApiRouter)
+
+app.use(isAuthenticated)
+
+app.use((err, req, res, next) => {
+  res.status(500).send('There was an error')
+})
 
 app.listen(3000, () => {
   console.log('listening on port 3000')

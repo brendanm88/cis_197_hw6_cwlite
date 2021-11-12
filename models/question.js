@@ -6,4 +6,4 @@ const questionSchema = new Schema({
   answer: String,
 })
 
-module.exports = model('User', questionSchema)
+module.exports = model('Question', questionSchema)

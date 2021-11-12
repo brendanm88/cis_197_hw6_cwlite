@@ -1,29 +1,33 @@
 const express = require('express')
 
-const router = express.Router()
+const isAuthenticated = require('../middlewares/isAuthenticated')
 
 const User = require('../models/user')
 
+const router = express.Router()
+
 // create user
-router.post('/signup', async (req, res) => {
+// include next here and use next to throw error? Or in this one jsut res.send? ****************
+router.post('/signup', async (req, res, next) => {
   const { username, password } = req.body
 
   try {
     await User.create({ username, password })
     res.send('user created')
   } catch (err) {
+    next(err)
     res.send('user creation has problems')
   }
 })
 
 // login
-router.post('/login', async (req, res) => {
+// include next here and use next to throw error? Or in this one jsut res.send? ****************
+router.post('/login', async (req, res, next) => {
   const { username, password } = req.body
 
   try {
     const user = await User.findOne({ username })
     console.log(user)
-
     if (!user) {
       res.send('user does not exist')
     } else {
@@ -38,15 +42,17 @@ router.post('/login', async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err)
+    next(err)
     res.send('user creation has problems')
   }
 })
 
 // logout
-router.post('/logout', (req, res) => {
-  req.session.username = null
-  req.session.password = null
+router.post('/logout', isAuthenticated, (req, res) => {
+  console.log('logout')
+  console.log(req.session.username)
+  req.session.username = ''
+  req.session.password = ''
   res.send('user is logged out')
 })
 
