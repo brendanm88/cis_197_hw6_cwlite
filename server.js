@@ -4,7 +4,6 @@ const session = require('cookie-session')
 
 const AccountRouter = require('./routes/account')
 const ApiRouter = require('./routes/api')
-
 const isAuthenticated = require('./middlewares/isAuthenticated')
 
 const app = express()
@@ -28,7 +27,6 @@ app.use(session({
 
 // can only access req.session within a POST request
 app.post('/', (req, res) => {
-  console.log(req.session)
   if (req.session.username && req.session.password) {
     res.send(`hello ${req.session.username}`)
   } else {
@@ -36,15 +34,15 @@ app.post('/', (req, res) => {
   }
 })
 
+// routers
 app.use('/account', AccountRouter)
 app.use('/api', ApiRouter)
 
-app.use(isAuthenticated)
-
-app.use((err, req, res, next) => {
-  res.status(500).send('There was an error')
+// error handling default/middleware
+app.use(isAuthenticated, (err, req, res, next) => {
+  res.status(500).send(err)
 })
 
 app.listen(3000, () => {
-  console.log('listening on port 3000')
+  // console.log('listening on port 3000')
 })

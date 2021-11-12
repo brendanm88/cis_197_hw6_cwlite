@@ -5,10 +5,7 @@ const router = express.Router()
 const Question = require('../models/question')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 
-// HOW TO MAKE isAuthenticated work??? ********************************
-
 // add questions
-// include next here and use next to throw error? Or in this one jsut res.send? ****************
 router.post('/questions/add', isAuthenticated, async (req, res, next) => {
   const { questionText, author } = req.body
 
@@ -22,7 +19,6 @@ router.post('/questions/add', isAuthenticated, async (req, res, next) => {
 })
 
 // add answer to question
-// include next here and use next to throw error? Or in this one jsut res.send? ****************
 router.post('/questions/answer', isAuthenticated, async (req, res, next) => {
   const { _id, answer } = req.body
 
@@ -36,7 +32,6 @@ router.post('/questions/answer', isAuthenticated, async (req, res, next) => {
 })
 
 // get all questions
-// include next here and use next to throw error? Or in this one jsut res.send? ****************
 router.get('/questions', async (req, res) => {
   try {
     const questions = await Question.find({})

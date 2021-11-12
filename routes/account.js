@@ -7,7 +7,6 @@ const User = require('../models/user')
 const router = express.Router()
 
 // create user
-// include next here and use next to throw error? Or in this one jsut res.send? ****************
 router.post('/signup', async (req, res, next) => {
   const { username, password } = req.body
 
@@ -21,13 +20,11 @@ router.post('/signup', async (req, res, next) => {
 })
 
 // login
-// include next here and use next to throw error? Or in this one jsut res.send? ****************
 router.post('/login', async (req, res, next) => {
   const { username, password } = req.body
 
   try {
     const user = await User.findOne({ username })
-    console.log(user)
     if (!user) {
       res.send('user does not exist')
     } else {
@@ -49,10 +46,8 @@ router.post('/login', async (req, res, next) => {
 
 // logout
 router.post('/logout', isAuthenticated, (req, res) => {
-  console.log('logout')
-  console.log(req.session.username)
-  req.session.username = ''
-  req.session.password = ''
+  req.session.username = null
+  req.session.password = null
   res.send('user is logged out')
 })
 

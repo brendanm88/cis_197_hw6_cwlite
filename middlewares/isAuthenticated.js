@@ -1,10 +1,9 @@
-const isAuthenticated = (req, res, next, err) => {
-  console.log('authenticated')
-  console.log(req.session.username)
+// middleware to check if a user is authenticated
+const isAuthenticated = (req, res, next) => {
   if (req.session.username && req.session.username !== '') {
     next()
   } else {
-    next(err)
+    next('User is not authenticated')
   }
 }
 
