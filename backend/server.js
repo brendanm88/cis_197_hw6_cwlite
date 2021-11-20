@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const session = require('cookie-session')
+const path = require('path')
 
 const AccountRouter = require('./routes/account')
 const ApiRouter = require('./routes/api')
@@ -15,14 +16,16 @@ mongoose.connect(MONGO_URI, {
   useUnifiedTopology: true,
 })
 
+app.use(express.static('dist'))
+
 // handling POST --> req.body
 app.use(express.json())
 
 app.use(session({
   name: 'session',
   keys: ['key1', 'key2'],
-  maxAge: 10000,
-  // 10 seconds
+  maxAge: 15000,
+  // 15 seconds
 }))
 
 // can only access req.session within a POST request
@@ -38,9 +41,19 @@ app.post('/', (req, res) => {
 app.use('/account', AccountRouter)
 app.use('/api', ApiRouter)
 
+// set favicon
+app.get('/favicon.ico', (req, res) => {
+  res.status(404).send()
+})
+
+// set the initial entry point
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'))
+})
+
 // error handling default/middleware
 app.use(isAuthenticated, (err, req, res, next) => {
-  res.status(500).send(err)
+  res.status(200).send('Error: user not authenticated')
 })
 
 app.listen(3000, () => {

@@ -6,6 +6,23 @@ const User = require('../models/user')
 
 const router = express.Router()
 
+router.get('/all', async (req, res) => {
+  try {
+    const users = await User.find()
+    res.json(users)
+  } catch (err) {
+    res.send('fetch all users has problems')
+  }
+})
+
+// is logged in?
+router.post('/isLoggedIn', isAuthenticated, (req, res) => {
+  const { username, password } = req.session
+  // console.log(username)
+  res.send(username)
+  // res.json({ username })
+})
+
 // create user
 router.post('/signup', async (req, res, next) => {
   const { username, password } = req.body
@@ -15,7 +32,6 @@ router.post('/signup', async (req, res, next) => {
     res.send('user created')
   } catch (err) {
     next(err)
-    res.send('user creation has problems')
   }
 })
 
@@ -40,7 +56,7 @@ router.post('/login', async (req, res, next) => {
     }
   } catch (err) {
     next(err)
-    res.send('user creation has problems')
+    // res.send('user creation has problems')
   }
 })
 
