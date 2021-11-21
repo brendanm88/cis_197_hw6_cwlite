@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
+import { QuesInputWrap, BasicButton } from '../styles/StyleComps'
 
 const Modal = ({
   show,
   author,
   onClose,
+  style,
 }) => {
   const [content, setContent] = useState('')
 
@@ -29,21 +31,22 @@ const Modal = ({
     return null
   }
   return (
-    <div>
+    <div style={style}>
       <h3>Post a question!</h3>
-      <input onChange={e => setContent(e.target.value)} />
-      <button
+      <QuesInputWrap onChange={e => setContent(e.target.value)} />
+      <br />
+      <BasicButton
         type="submit"
         onClick={() => addQuestion()}
       >
         Submit
-      </button>
-      <button
+      </BasicButton>
+      <BasicButton
         type="submit"
         onClick={() => onClose()}
       >
         Cancel
-      </button>
+      </BasicButton>
     </div>
   )
 }

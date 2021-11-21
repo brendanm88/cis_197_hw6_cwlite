@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import {
-  BrowserRouter as Router,
-  Switch,
-  Routes,
-  Route,
   Link,
 } from 'react-router-dom'
 import axios from 'axios'
+import {
+  Title,
+  loginLinkStyle,
+  QButton,
+  LogoutButton,
+  MButton,
+  modalStyle,
+} from '../styles/StyleComps'
 
 import Modal from './Modal'
 import Question from './Question'
@@ -14,14 +18,14 @@ import Question from './Question'
 const Home = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [answer, setAnswer] = useState('')
   const [modal, setModal] = useState(false)
   const [questions, setQuestions] = useState([])
+  const [shownID, setShownID] = useState('')
 
   const showModal = () => {
     setModal(!modal)
   }
-  // fix this so it shows up immediately after refresh!
+
   useEffect(() => {
     const intervalID = setInterval(async () => {
       const { data } = await axios.get('/api/questions') // GET request
@@ -30,7 +34,6 @@ const Home = () => {
     return () => clearInterval(intervalID)
   }, [])
 
-  // fix window alert here ************************************????
   useEffect(async () => {
     try {
       const { data } = await axios.post('/account/isLoggedIn', { username, password })
@@ -41,7 +44,6 @@ const Home = () => {
       }
     } catch (err) {
       setUsername('')
-      // console.log('user not logged in')
     }
   }, [])
 
@@ -60,34 +62,45 @@ const Home = () => {
   if (username !== '') {
     return (
       <div>
-        <h2>Home Page</h2>
-        <h3>
-          Hello &nbsp;
+        <Title>Ask Questions, Get Answers</Title>
+        <LogoutButton type="submit" onClick={logoutUser}>
+          Logout
+        </LogoutButton>
+        <h2 style={{
+          float: 'right',
+          margin: '1em',
+          position: 'relative',
+          top: '-17px',
+          right: '90px',
+          fontSize: '1.5em',
+          color: '#474747',
+        }}
+        >
+          &nbsp;&nbsp;Hello&nbsp;
           {username}
           !
-        </h3>
-        <button type="submit" onClick={logoutUser}>
-          logout
-        </button>
+        </h2>
         <br />
         <br />
         <br />
-        <button type="submit" onClick={() => setModal(true)}>
-          Add new Question +
-        </button>
-        <Modal show={modal} author={username} onClose={showModal} />
-        {/* NEED TO MAKE MODAL SHOW UP WITH NEW QUESTION TEXT********************
-        password:
-        <input onChange={e => setPassword(e.target.value)} />
-        <br />
-        <button type="submit" onClick={loginUser}>
-          Post
-        </button> */}
+        <MButton style={{ background: '#c4ecff' }} type="submit" onClick={() => setModal(true)}>
+          Add new question +
+        </MButton>
+        <Modal style={modalStyle} show={modal} author={username} onClose={showModal} />
         <>
-          {/* MAKE INDIVIDUAL QUESTION COMPONENT??? ****************************** */}
           {questions.map(q => (
             <div key={q._id}>
-              <Question question={q} />
+              <br />
+              <QButton
+                style={{
+                  background: (q._id === shownID) ? '#c4ecff' : '#ebebeb',
+                }}
+                type="submit"
+                onClick={() => ((q._id === shownID) ? setShownID('') : setShownID(q._id))}
+              >
+                {q.questionText}
+              </QButton>
+              <Question question={q} shown={q._id === shownID} loggedIn={username !== null && username !== ''} />
             </div>
           ))}
         </>
@@ -96,23 +109,23 @@ const Home = () => {
   }
   return (
     <div>
-      <h2>Home Page</h2>
-      <Link to="/login">Login to submit or answer a question!</Link>
+      <Title>Ask questions, get answers!</Title>
+      <Link to="/login" style={loginLinkStyle}>Login to submit or answer a question!</Link>
       <br />
       <>
         {questions.map(q => (
           <div key={q._id}>
-            <h4>{q.questionText}</h4>
-            <p>
-              Author:
-              <br />
-              {q.author}
-            </p>
-            <p>
-              Answer:
-              <br />
-              {q.answer}
-            </p>
+            <br />
+            <QButton
+              style={{
+                background: (q._id === shownID) ? '#c4ecff' : '#ebebeb',
+              }}
+              type="submit"
+              onClick={() => ((q._id === shownID) ? setShownID('') : setShownID(q._id))}
+            >
+              {q.questionText}
+            </QButton>
+            <Question question={q} shown={q._id === shownID} loggedIn={username !== null && username !== ''} />
           </div>
         ))}
       </>

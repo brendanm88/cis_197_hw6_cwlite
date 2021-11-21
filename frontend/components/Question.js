@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
+import { AnswerButton, questionStyle, AnsInputWrap } from '../styles/StyleComps'
 
 const Question = ({
   question,
+  shown,
+  loggedIn,
 }) => {
   const [content, setContent] = useState('')
-  const [answering, setAnswering] = useState(false)
+  // const [answering, setAnswering] = useState(false)
   const {
     _id,
     author,
-    questionText,
     answer,
+    questionText,
   } = question
 
   const addAnswer = async id => {
@@ -20,8 +23,9 @@ const Question = ({
       try {
         const { data } = await axios.post('/api/questions/answer', { id, answer: content })
         if (data === 'question answer updated') {
+          // continue
           // close answer
-          setAnswering(false)
+          // setAnswering(false)
         }
       } catch (err) {
         // throw alert!
@@ -30,51 +34,57 @@ const Question = ({
     }
   }
 
-  if (!answering) {
-    return (
-      <>
-        <h4>{questionText}</h4>
-        <p>
-          Author:
+  if (shown) {
+    if (loggedIn) {
+      return (
+        <div style={questionStyle}>
+          <h2 style={{ height: 'fit-content', 'word-wrap': 'break-word', 'text-align': 'center' }}>
+            {questionText}
+          </h2>
+          <h3>
+            Author:
+          </h3>
+          <p style={{ height: 'fit-content', 'word-wrap': 'break-word' }}>
+            {author}
+          </p>
+          <h3>
+            Answer:
+          </h3>
+          <p style={{ height: 'fit-content', 'word-wrap': 'break-word' }}>
+            {answer}
+          </p>
+          <h3>
+            Answer this question:
+          </h3>
+          <AnsInputWrap onChange={e => setContent(e.target.value)} />
           <br />
+          <AnswerButton type="submit" onClick={() => addAnswer(_id)}>
+            Submit answer
+          </AnswerButton>
+        </div>
+      )
+    }
+    return (
+      <div style={questionStyle}>
+        <h2 style={{ height: 'fit-content', 'word-wrap': 'break-word', 'text-align': 'center' }}>
+          {questionText}
+        </h2>
+        <h3>
+          Author:
+        </h3>
+        <p style={{ height: 'fit-content', 'word-wrap': 'break-word' }}>
           {author}
         </p>
-        <p>
+        <h3>
           Answer:
-          <br />
+        </h3>
+        <p style={{ height: 'fit-content', 'word-wrap': 'break-word' }}>
           {answer}
         </p>
-        <p>
-          <button type="submit" onClick={() => setAnswering(!answering)}>
-            Answer!
-          </button>
-        </p>
-      </>
+      </div>
     )
   }
-  return (
-    <>
-      <h4>{questionText}</h4>
-      <p>
-        Author:
-        <br />
-        {author}
-      </p>
-      <p>
-        Answer:
-        <br />
-        {answer}
-      </p>
-      <p>
-        Answer this question:
-        <input onChange={e => setContent(e.target.value)} />
-        <br />
-        <button type="submit" onClick={() => addAnswer(_id)}>
-          Submit answer
-        </button>
-      </p>
-    </>
-  )
+  return null
 }
 
 export default Question

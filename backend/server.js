@@ -24,8 +24,8 @@ app.use(express.json())
 app.use(session({
   name: 'session',
   keys: ['key1', 'key2'],
-  maxAge: 15000,
-  // 15 seconds
+  maxAge: 26 * 60 * 60 * 1000,
+  // 24 hours
 }))
 
 // can only access req.session within a POST request
