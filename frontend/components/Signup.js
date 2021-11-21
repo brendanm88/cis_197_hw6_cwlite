@@ -16,6 +16,7 @@ const Signup = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
+  // signup a new user, post request
   const signupUser = async () => {
     if (username === '' || password === '') {
       window.alert('please enter a username and password')
@@ -35,6 +36,7 @@ const Signup = () => {
     }
   }
 
+  // return component, input and text as usual
   return (
     <div>
       <Title>Signup!</Title>
@@ -53,7 +55,6 @@ const Signup = () => {
         Already have an account?
         <Link to="/login" style={linkStyle}>Login</Link>
       </p>
-
     </div>
   )
 }

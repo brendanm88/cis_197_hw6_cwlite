@@ -30,6 +30,7 @@ const Modal = ({
   if (!show) {
     return null
   }
+  // display if showing
   return (
     <div style={style}>
       <h3>Post a question!</h3>

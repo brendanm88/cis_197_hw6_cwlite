@@ -16,6 +16,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
+  // post request for login
   const loginUser = async () => {
     if (username === '' || password === '') {
       window.alert('please enter a username and password')
@@ -35,6 +36,7 @@ const Login = () => {
     }
   }
 
+  // return component, show inputs and text
   return (
     <div>
       <Title>Login!</Title>

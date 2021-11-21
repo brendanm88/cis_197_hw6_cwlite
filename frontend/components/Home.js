@@ -26,6 +26,7 @@ const Home = () => {
     setModal(!modal)
   }
 
+  // update questions on internval
   useEffect(() => {
     const intervalID = setInterval(async () => {
       const { data } = await axios.get('/api/questions') // GET request
@@ -34,6 +35,7 @@ const Home = () => {
     return () => clearInterval(intervalID)
   }, [])
 
+  // check if user logged in
   useEffect(async () => {
     try {
       const { data } = await axios.post('/account/isLoggedIn', { username, password })
@@ -47,6 +49,7 @@ const Home = () => {
     }
   }, [])
 
+  // logout post request
   const logoutUser = async () => {
     try {
       const { data } = await axios.post('/account/logout', { username, password })
@@ -59,6 +62,7 @@ const Home = () => {
     }
   }
 
+  // if someone logged in
   if (username !== '') {
     return (
       <div>
@@ -107,6 +111,7 @@ const Home = () => {
       </div>
     )
   }
+  // if not logged in, cannot add a question yet
   return (
     <div>
       <Title>Ask questions, get answers!</Title>

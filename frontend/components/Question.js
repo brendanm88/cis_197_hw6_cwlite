@@ -16,6 +16,7 @@ const Question = ({
     questionText,
   } = question
 
+  // post request for answering question
   const addAnswer = async id => {
     if (content === '') {
       window.alert('empty answer!')
@@ -24,7 +25,6 @@ const Question = ({
         const { data } = await axios.post('/api/questions/answer', { id, answer: content })
         if (data === 'question answer updated') {
           // continue
-          // close answer
           // setAnswering(false)
         }
       } catch (err) {
@@ -34,6 +34,7 @@ const Question = ({
     }
   }
 
+  // only show question if clicked, if logged in show answer option
   if (shown) {
     if (loggedIn) {
       return (

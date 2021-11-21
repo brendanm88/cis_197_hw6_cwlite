@@ -15,12 +15,10 @@ router.get('/all', async (req, res) => {
   }
 })
 
-// is logged in?
+// is logged in? middleware to check
 router.post('/isLoggedIn', isAuthenticated, (req, res) => {
   const { username, password } = req.session
-  // console.log(username)
   res.send(username)
-  // res.json({ username })
 })
 
 // create user
